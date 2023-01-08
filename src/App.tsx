@@ -1,25 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Route, Routes} from "react-router-dom";
+import Homepage from './components/home/home.component';
+import Login from './components/login/login.component';
+import Algorithms from "./components/algorithms/algorithms.component";
+import Play from "./components/play/play.component";
+import Signup from "./components/signup/signup.component";
+import Leaderboard from "./components/leaderboard/leaderboard.component";
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Routes>
+          <Route path="/" element={<Homepage/>}/>
+          <Route path="play" element={<Play/>}/>
+          <Route path="login" element={<Login/>}/>
+          <Route path="signup" element={<Signup/>}/>
+          <Route path="leaderboard" element={<Leaderboard/>}/>
+          <Route path="algorithms" element={<Algorithms/>}/>
+      </Routes>
   );
 }
 
