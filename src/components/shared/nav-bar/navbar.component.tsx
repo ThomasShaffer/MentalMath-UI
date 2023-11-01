@@ -8,10 +8,10 @@ import {Container, Nav, Navbar as Navb, NavDropdown} from "react-bootstrap";
 const Navbar = (props: any) => {
     const buttonPages = ["play", "login", "signup", "leaderboard", "algorithms"]
 
-    function renderList(button: string) {
+    function renderList(button: string, index: number) {
         return (
             <div key={button}>
-                <NavDropdown.Item href={button} key={button}>{button}</NavDropdown.Item>
+                <NavDropdown.Item href={button} key={button + index}>{button}</NavDropdown.Item>
                 <NavDropdown.Divider key={button} />
             </div>
         )
@@ -28,7 +28,7 @@ const Navbar = (props: any) => {
                             id="nav-dropdown-dark-example"
                             title="Select"
                             menuVariant="dark">
-                            {buttonPages.map((button) => renderList(button))}
+                            {buttonPages.map((button, index: number) => renderList(button, index))}
                         </NavDropdown>
                     </Nav>
                 </Navb.Collapse>

@@ -7,12 +7,14 @@ import Algorithms from "./components/algorithms/algorithms.component";
 import Play from "./components/play/play.component";
 import Signup from "./components/signup/signup.component";
 import Leaderboard from "./components/leaderboard/leaderboard.component";
+import Game from "./components/game/game";
 
 function App() {
 
   return (
       <Routes>
           <Route path="/" element={<Homepage/>}/>
+          <Route path="game" element={<Game/>}/>
           <Route path="play" element={<Play/>}/>
           <Route path="login" element={<Login/>}/>
           <Route path="signup" element={<Signup/>}/>

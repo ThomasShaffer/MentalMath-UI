@@ -8,9 +8,9 @@ const Login = (props: any) => {
     const [forgotPassword, setForgotPassword] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [authorized, setAuthorized] = useState(true);
+    const [authorized, setAuthorized] = useState(false);
 
-    async function handleLoginSubmit(e: React.SyntheticEvent){
+    function handleLoginSubmit(e: React.SyntheticEvent){
         e.preventDefault();
         const request = {
             method: 'POST',
@@ -20,10 +20,7 @@ const Login = (props: any) => {
                 "password" : password
             })
         };
-        console.log("before : " + authorized)
-        await tryLogin(request);
-        console.log("after : " + authorized)
-
+        tryLogin(request);
     }
 
     function tryLogin(request: RequestInit) {
@@ -31,12 +28,11 @@ const Login = (props: any) => {
             fetch("/login", request)
                 .then(response => response.json())
                 .then(data => setAuthorized(data.authorized))
-                .then(data => console.log(authorized))
-        } catch {
-            console.log("some issue");
+        } catch (error) {
+            console.log("ERROR: " + error);
+        } finally {
+            authorized ?  navigate("/") : console.log("cant login");
         }
-        // return authorized ? console.log("slide " + password + authorized) : console.log("hell nah " + password + authorized);
-        return;
     }
 
     function handleForgotPasswordSubmit(e: React.SyntheticEvent){
@@ -48,7 +44,7 @@ const Login = (props: any) => {
         event.currentTarget.name === "username" ? setUsername(event.currentTarget.value) : setPassword(event.currentTarget.value)
     }
 
-//known bug... changing the username.password initially causes an issue but only on the first submit
+    //known bug... changing the username.password initially causes an issue but only on the first submit
     return (
         <div>
             <Navbar/>

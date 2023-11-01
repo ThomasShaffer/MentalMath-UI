@@ -61,15 +61,15 @@ const Signup = (props: any) => {
             <form onSubmit={handleSignupSubmit}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Username</label>
-                    <input type="username" className="form-control" id="username" value={username} onChange={handleChange}/>
+                    <input type="username" className="form-control" id="username" value={username} placeholder="required" onChange={handleChange}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" id="password" value={password} onChange={handleChange}/>
+                    <input type="password" className="form-control" id="password" value={password} placeholder="required" onChange={handleChange}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="verifyPassword" className="form-label">Verify Password</label>
-                    <input type="password" className="form-control" id="verifyPassword" value ={verifyPassword} onChange={handleChange}/>
+                    <input type="password" className="form-control" id="verifyPassword" value ={verifyPassword} placeholder="required" onChange={handleChange}/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="socialSecurity" className="form-label">Social Security Number</label>
