@@ -40,11 +40,12 @@ const Play = (props: any) => {
         e.preventDefault();
         navigate('/game', {
             state: {
+                    difficulty: "custom",
                     firstDigitMin: firstNumberDigits.min,
                     firstDigitMax: firstNumberDigits.max,
                     secondDigitMin: secondNumberDigits.min,
                     secondDigitMax: secondNumberDigits.max,
-                    timeConstraint: 30
+                    timeConstraint: maxTime
             }
         });
 
