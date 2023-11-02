@@ -1,5 +1,6 @@
 import React from "react";
 import "./navbar.css";
+import "../../../App.css";
 import {Container, Nav, Navbar as Navb, NavDropdown} from "react-bootstrap";
 
 

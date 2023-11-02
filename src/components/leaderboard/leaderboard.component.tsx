@@ -17,9 +17,9 @@ const Leaderboard = (props: any) => {
                     <tbody>
                     <tr>
                         <th scope="row">1</th>
-                        <td>jijioo</td>
+                        <td>datsDaddyfrfr</td>
                         <td>69</td>
-                        <td>3x2</td>
+                        <td>420</td>
                     </tr>
                     </tbody>
                 </table>

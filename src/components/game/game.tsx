@@ -1,9 +1,11 @@
 import {Button, ButtonGroup, Form, InputGroup, Spinner, Stack} from "react-bootstrap";
 import {useLocation, useNavigate} from "react-router-dom";
 import Navbar from "../shared/nav-bar/navbar.component";
-import {useEffect, useState} from "react";
+import {SyntheticEvent, useEffect, useReducer, useState} from "react";
 import {clearInterval} from "timers";
 import {Clock} from "../shared/Clock";
+import {FinishedDialog} from "../shared/FinishedDialog";
+import {ErrorAnswer} from "../shared/error/ErrorAnswer";
 
 const Game = (props: any) => {
     const navigate = useNavigate();
@@ -11,21 +13,38 @@ const Game = (props: any) => {
 
     const [error, setError] = useState(false);
     const [correct, setCorrect] = useState(false);
-    const [timeStart] = useState(new Date().getTime());
+    const [showDialog, setShowDialog] = useState(false);
+    const [timeStart, setTimeStart] = useState(new Date().getTime());
     const [timeElapsed, setTimeElapsed] = useState(new Date().getTime());
     const [timeLeft, setTimeLeft] = useState(state.timeConstraint);
     const [firstNumber, setFirstNumber] = useState(0);
     const [secondNumber, setSecondNumber] = useState(0);
     const [answer, setAnswer] = useState(-1);
+    const [render, setRender] = useState(false);
+    const [retry, setRetry] = useState(false);
 
-    useEffect(() => {
+    const flush = (renderOrRetry: Function) => {
+        setTimeLeft(state.timeConstraint);
+        setCorrect(false);
+        setError(false);
+        setAnswer(0);
+        setTimeStart(new Date().getTime());
+        renderOrRetry(false);
+    }
+
+    useEffect( () => {
         if (state.difficulty !== "custom") {
             generateNumbersBasedOnDifficulty(state.difficulty);
         } else {
             generateNumbersBasedOnRanges(state);
         }
-    },[]);
+        if (render) flush(setRender);
+    }, [render]);
 
+
+    useEffect( () => {
+       flush(setRetry);
+    }, [retry]);
 
     const generateNumbersBasedOnRanges = (state: any) => {
         setFirstNumber(6);
@@ -33,7 +52,7 @@ const Game = (props: any) => {
     }
 
     const generateNumbersBasedOnDifficulty = (difficulty: any) => {
-        const easyGame = [Math.floor(Math.random()* 10) + 1, Math.floor(Math.random()* 10) + 1];
+        const easyGame = [Math.floor(Math.random()* 10) + 2, Math.floor(Math.random()* 10) + 2];
         const mediumGame = [Math.floor(Math.random()* 50) + 11, Math.floor(Math.random() * 50) + 11];
         const hardGame = [Math.floor(Math.random()* 100) + 21, Math.floor(Math.random()* 100) + 21];
 
@@ -58,16 +77,27 @@ const Game = (props: any) => {
 
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        !correct ? setError(true) : setError(false);
+        if (correct) {
+            setError(false);
+            setShowDialog(true);
+            ((e.currentTarget) as HTMLFormElement).reset();
+            return;
+        }
+        setError(true);
 
     }
-
-    const ShowError = () => {
-        let message: string = "";
-        if (error) message = "IMBECILE";
+    const GameField = (props: any) => {
         return (
-            <h1>{message}</h1>
-        );
+            <Form className="align-content-xl-center" onSubmit={props.handleSubmit}>
+                <Stack gap={2} className="col-md-5 mx-auto">
+                    <InputGroup size="lg">
+                        <Form.Control autoFocus={true} onChange={props.handleAnswer} placeholder="Answer"></Form.Control>
+                    </InputGroup>
+                    <Button variant="outline-primary" type="submit">Enter</Button>
+                    <Button variant="outline-dark" onClick={() => (navigate('/play'))}>Go back to selection</Button>
+                </Stack>
+            </Form>
+        )
     }
 
     return (
@@ -79,15 +109,16 @@ const Game = (props: any) => {
                 <Form className="align-content-xl-center" onSubmit={handleSubmit}>
                     <Stack gap={2} className="col-md-5 mx-auto">
                         <InputGroup size="lg">
-                            <Form.Control autoFocus={true} onChange={handleAnswer} placeholder="Answer"></Form.Control>
+                            <Form.Control autoFocus={true} onChange={handleAnswer} placeholder="Answer"/>
                         </InputGroup>
                         <Button variant="outline-primary" type="submit">Enter</Button>
                         <Button variant="outline-dark" onClick={() => (navigate('/play'))}>Go back to selection</Button>
                     </Stack>
                 </Form>
             <br/>
-            <Clock time={state.timeConstraint} stop={correct}/>
-            <ShowError />
+            <Clock time={5} stop={showDialog} handleTimeOut={setShowDialog} handleError={setError}/>
+            <FinishedDialog show={showDialog} handleShow={setShowDialog} handleRender={setRender} handleRetry={setRetry} correct={correct} answer={answer}/>
+            <ErrorAnswer error={!error}/>
         </div>
     )
 }

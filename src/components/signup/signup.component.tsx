@@ -58,6 +58,7 @@ const Signup = (props: any) => {
     return (
         <div>
             <Navbar/>
+            <br/>
             <form onSubmit={handleSignupSubmit}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Username</label>

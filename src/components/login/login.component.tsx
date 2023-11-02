@@ -48,6 +48,7 @@ const Login = (props: any) => {
     return (
         <div>
             <Navbar/>
+            <br/>
             <form onSubmit={forgotPassword ? handleForgotPasswordSubmit : handleLoginSubmit}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Username</label>
