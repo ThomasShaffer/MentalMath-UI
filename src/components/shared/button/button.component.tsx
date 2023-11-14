@@ -1,7 +1,7 @@
 import React from "react";
 import "./button.css";
 
-const Button = (props: any) => {
+const CustomButton = (props: any) => {
     return (
         <button type={props.type ? props.type : "button"}
                 className="btn btn-primary btn-lg spaced"
@@ -13,4 +13,4 @@ const Button = (props: any) => {
     )
 }
 
-export default Button;
+export default CustomButton;

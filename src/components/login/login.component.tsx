@@ -1,14 +1,23 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Button from "../shared/button/button.component";
 import {useNavigate} from "react-router-dom";
 import Navbar from "../shared/nav-bar/navbar.component";
+import {UserContext} from "../../context/UserContext";
 
 const Login = (props: any) => {
     const navigate = useNavigate();
+    const userContext = useContext(UserContext);
     const [forgotPassword, setForgotPassword] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [authorized, setAuthorized] = useState(false);
+    const [authorized, setAuthorized] = useState();
+
+    useEffect(() => {
+        if (authorized) {
+            console.log("successful login!")
+            navigate("/");
+        }
+    }, [authorized]);
 
     function handleLoginSubmit(e: React.SyntheticEvent){
         e.preventDefault();
@@ -20,36 +29,31 @@ const Login = (props: any) => {
                 "password" : password
             })
         };
-        tryLogin(request);
+        fetch("/login", request)
+            .then(response => response.json())
+            .then(data => setAuthorized(data.authorized))
+            .catch(error => console.log("ERROR: " + error));
     }
 
-    function tryLogin(request: RequestInit) {
-        try {
-            fetch("/login", request)
-                .then(response => response.json())
-                .then(data => setAuthorized(data.authorized))
-        } catch (error) {
-            console.log("ERROR: " + error);
-        } finally {
-            authorized ?  navigate("/") : console.log("cant login");
-        }
+
+    const ForgotPassword = (props: {show: boolean}) => {
+        return (
+            <div hidden={!props.show}>
+            <h1>SUCKS</h1>
+            </div>
+        );
     }
 
-    function handleForgotPasswordSubmit(e: React.SyntheticEvent){
-        e.preventDefault();
-        //will implement later
-    }
 
     const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-        event.currentTarget.name === "username" ? setUsername(event.currentTarget.value) : setPassword(event.currentTarget.value)
+        event.currentTarget.name === "username" ? setUsername(event.currentTarget.value) : setPassword(event.currentTarget.value);
     }
 
-    //known bug... changing the username.password initially causes an issue but only on the first submit
     return (
         <div>
             <Navbar/>
             <br/>
-            <form onSubmit={forgotPassword ? handleForgotPasswordSubmit : handleLoginSubmit}>
+            <form onSubmit={handleLoginSubmit}>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Username</label>
                     <input type="username" className="form-control" name="username" value={username} onChange={handleChange}/>
@@ -59,8 +63,9 @@ const Login = (props: any) => {
                     <input type="password" className="form-control" id="password" value={password} onChange={handleChange}/>
                 </div>
                 <Button type="submit" keyName="submit" buttonName="login"/>
-                <Button type="submit" functionToUse={() => navigate("/")} keyName="forgot" buttonName="forgot password"/>
+                <Button type="submit" functionToUse={() => setForgotPassword(!forgotPassword)} keyName="forgot" buttonName="forgot password"/>
             </form>
+            <ForgotPassword show={forgotPassword}/>
         </div>
     )
 }

@@ -1,13 +1,18 @@
-import React, {useState} from "react";
-import Button from "../shared/button/button.component";
+import React, {useEffect, useState} from "react";
+import CustomButton from "../shared/button/button.component";
+import {Button, ButtonGroup, Dropdown, DropdownButton, Modal, Stack} from "react-bootstrap";
 import {Simulate} from "react-dom/test-utils";
 import input = Simulate.input;
 import Navbar from "../shared/nav-bar/navbar.component";
+import {useNavigate} from "react-router-dom";
 
 const Signup = (props: any) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [verifyPassword, setVerifyPassword] = useState("");
+    const [created, setCreated] = useState();
+
+    const navigate = useNavigate();
 
     const inputMethodMap = {
         "username": setUsername,
@@ -20,10 +25,13 @@ const Signup = (props: any) => {
         inputMethodMap[event.currentTarget.id](event.currentTarget.value)
     }
 
-    function handleSignupSubmit(e: React.SyntheticEvent) {
+    useEffect( () => {
+       console.log(created);
+    }, [created]);
 
+    function handleSignupSubmit(e: React.SyntheticEvent) {
         e.preventDefault();
-        verifyPasswordsMatch();
+        if (!verifyPasswordsMatch()) return;
         const request = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
@@ -32,27 +40,33 @@ const Signup = (props: any) => {
                 "password" : password
             })
         };
-        trySignup(request);
+        fetch("/signup", request)
+            .then(response => response.json())
+            .then(data => setCreated(data.successful))
+            .catch(error => console.log(error));
     }
 
-    function trySignup(request: RequestInit) {
-        try {
-            return fetch("/signup", request)
-                .then(response => response.json())
-                .then(data => console.log(data));
-        } catch {
-            console.log("some other shit");
-            return;
-        }
+
+    const verifyPasswordsMatch = (): Boolean => {
+        if (password === verifyPassword) return true;
+        alert("passwords dont match");
+        setPassword("");
+        setVerifyPassword("");
+        return false;
     }
 
-    function verifyPasswordsMatch() {
-        if (password !== verifyPassword) {
-            alert("passwords dont match");
-            setPassword("");
-            setVerifyPassword("");
-            return;
-        }
+    const CreatedPopup = (props: {created: undefined|boolean}) => {
+        return (
+            <Modal show={props.created!==undefined && props.created} animation={true} style={{alignSelf: 'center'}} size="lg" centered>
+                <br/>
+                <Modal.Title style={{alignSelf: 'center'}} id="contained-modal-title-vcenter"> created user: {username} </Modal.Title>
+                <Modal.Footer id="contained-modal-title-vcenter">
+                    <Stack>
+                        <Button onClick={() => navigate('/')}> home </Button>
+                    </Stack>
+                </Modal.Footer>
+            </Modal>
+        )
     }
 
     return (
@@ -80,8 +94,9 @@ const Signup = (props: any) => {
                     <label htmlFor="creditCard" className="form-label">Credit Card Number</label>
                     <input type="creditCard" className="form-control" id="creditCard"/>
                 </div>
-                <Button type="submit" keyName="signup" buttonName="signup"/>
+                <CustomButton type="submit" keyName="signup" buttonName="signup"/>
             </form>
+            <CreatedPopup created={created}/>
         </div>
     )
 }

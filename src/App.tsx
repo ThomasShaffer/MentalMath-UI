@@ -7,7 +7,7 @@ import Algorithms from "./components/algorithms/algorithms.component";
 import Play from "./components/play/play.component";
 import Signup from "./components/signup/signup.component";
 import Leaderboard from "./components/leaderboard/leaderboard.component";
-import Game from "./components/game/game";
+import Game from "./components/game/game.component";
 
 function App() {
 

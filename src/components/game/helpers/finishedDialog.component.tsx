@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, Dropdown, DropdownButton, Modal, Stack} from "react-bootstrap";
 import {SyntheticEvent, useReducer} from "react";
 import {useNavigate} from "react-router-dom";
-import '../../index.css';
+import '../../../index.css';
 import DropdownItem from "react-bootstrap/DropdownItem";
 
 export const FinishedDialog = (props: any) => {

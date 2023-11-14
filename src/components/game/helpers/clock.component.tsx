@@ -6,8 +6,9 @@ export const Clock = (props: any) => {
     useEffect(() => {
         if (props.stop) return;
         if (time <= 0) {
-            props.handleTimeOut(true);
+            props.handleShow(true);
             props.handleError(true);
+            props.handleTimeout();
             return;
         }
         const timer = setInterval(() => setTime(time - 1), 1000);

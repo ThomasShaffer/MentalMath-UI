@@ -1,13 +1,16 @@
-import React from "react";
+import React, {useContext, useState} from "react";
 import "./navbar.css";
 import "../../../App.css";
 import {Container, Nav, Navbar as Navb, NavDropdown} from "react-bootstrap";
+import {UserContext} from "../../../context/UserContext";
 
 
 
 
 const Navbar = (props: any) => {
+    const userContext = useContext(UserContext);
     const buttonPages = ["play", "login", "signup", "leaderboard", "algorithms"]
+    const [username, setUserName] = useState("");
 
     function renderList(button: string, index: number) {
         return (
@@ -22,7 +25,6 @@ const Navbar = (props: any) => {
         <Navb variant="dark" bg="dark" expand="lg">
             <Container fluid>
                 <Navb.Brand href="/">Mental Math Trainer</Navb.Brand>
-                <Navb.Toggle aria-controls="navbar-dark-example" />
                 <Navb.Collapse>
                     <Nav>
                         <NavDropdown
@@ -32,6 +34,9 @@ const Navbar = (props: any) => {
                             {buttonPages.map((button, index: number) => renderList(button, index))}
                         </NavDropdown>
                     </Nav>
+                </Navb.Collapse>
+                <Navb.Collapse className="justify-content-end">
+                    <Navb.Text> {userContext} </Navb.Text>
                 </Navb.Collapse>
             </Container>
         </Navb>
